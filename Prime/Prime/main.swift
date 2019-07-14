@@ -97,25 +97,54 @@ class PrimeFinder {
 
 class NumberPrinter {
 
-    static func printNumber(_ numbers: [Int]) {
-        let RR = 50
-        let CC = 4
-        var pageNumber = 1
-        var pageOffset = 0
-
-        while pageOffset < numbers.count {
-            print("The First \(numbers.count - 1) Prime Numbers --- page \(pageNumber)")
-            for rowOffset in pageOffset..<(pageOffset + RR) {
-                for c in 0..<CC {
-                    if rowOffset + c * RR < numbers.count {
-                        let num = String(format: "%10d", numbers[rowOffset + c * RR])
-                        print("\(num)", terminator: "")
-                    }
-                }
-                print("")
-            }
-            pageNumber = pageNumber + 1
-            pageOffset = pageOffset + RR * CC
+    let rowsPerPage: Int
+    let columnCount: Int
+    
+    init(rowsPerPage: Int = 7, columnCount: Int = 5) {
+        self.rowsPerPage = rowsPerPage
+        self.columnCount = columnCount
+    }
+    
+    func printNumbers(_ numbers: [Int]) {
+        self.numbers = numbers
+        self.pageNumber = 1
+        self.pageOffset = 0
+        
+        while self.pageOffset < numbers.count {
+            self.printPage()
+            self.pageNumber = self.pageNumber + 1
+            self.pageOffset = self.pageOffset + self.rowsPerPage * self.columnCount
+        }
+    }
+    
+    private var numbers: [Int] = []
+    private var pageNumber: Int = 1
+    private var pageOffset: Int = 0
+    
+    private func printPage() {
+        self.printHeader()
+        
+        for rowOffset in self.pageOffset..<(self.pageOffset + self.rowsPerPage) {
+            self.printRow(rowOffset: rowOffset)
+        }
+    }
+    
+    private func printHeader() {
+        print("The First \(self.numbers.count) Prime Numbers --- page \(self.pageNumber)")
+    }
+    
+    private func printRow(rowOffset: Int) {
+        for column in 0..<self.columnCount {
+            self.printColumn(column: column, rowOffset: rowOffset)
+        }
+        print("")
+    }
+    
+    private func printColumn(column: Int, rowOffset: Int) {
+        let index = rowOffset + column * self.rowsPerPage
+        if index < self.numbers.count {
+            let num = String(format: "%10d", self.numbers[index])
+            print("\(num)", terminator: "")
         }
     }
 
@@ -128,7 +157,7 @@ class PrintPrimes {
         let primes = PrimeFinder(max: 1000).find()
         assert(primes.last == 7919)
         assert(primes.count == 1000)
-        NumberPrinter.printNumber(primes)
+        NumberPrinter(rowsPerPage: 50, columnCount: 4).printNumbers(primes)
     }
 
 }
