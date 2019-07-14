@@ -61,27 +61,20 @@ class PrimeChecker {
 
     init(source: PrimeSource?) {
         self.source = source
-        self.mult = [2]
-
-        self.ord = 2
-        self.square = 9
+        self.multiples = [2]
     }
 
     weak var source: PrimeSource?
     
-    var ord: Int = 0
-    var square: Int = 0
-    var mult: [Int]
-
-    let ORDMAX = 30
+    var multiples: [Int]
 
     func isPrime(_ candidate: Int) -> Bool {
         if  self.isLeastRelevantMultipleOfNextLargerPrimeFactor(candidate: candidate)  {
-            self.mult.append(candidate)
+            self.multiples.append(candidate)
             return false
         }
         
-        for n in (0..<self.mult.count) {
+        for n in (0..<self.multiples.count) {
             if self.isMultipleOfPrimeFactor(candidate: candidate, nth: n) {
                 return false
             }
@@ -97,11 +90,11 @@ class PrimeChecker {
     }
     
     var nextLargerPrimeFactor: Int {
-        guard let source = self.source, source.primes.count > self.mult.count else {
+        guard let source = self.source, source.primes.count > self.multiples.count else {
             return 0
         }
         
-        return self.source!.primeNumber(at: self.mult.count)
+        return self.source!.primeNumber(at: self.multiples.count)
     }
 
     func isMultipleOfPrimeFactor(candidate: Int, nth: Int) -> Bool {
@@ -113,12 +106,12 @@ class PrimeChecker {
             assert(false)
         }
 
-        var multiple = self.mult[n]
+        var multiple = self.multiples[n]
         let primeAtNo = source.primeNumber(at: n)
 
         while multiple < candidate {
             multiple += (primeAtNo * 2)
-            self.mult[n] = multiple
+            self.multiples[n] = multiple
         }
 
         return multiple
