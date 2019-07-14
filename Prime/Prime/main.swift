@@ -11,49 +11,64 @@ import Foundation
 
 class PrimeFinder {
 
-    static func find() -> [Int] {
-        let max = 1000
-        let ORDMAX = 30
-        var primes: [Int] = Array<Int>(repeating: 0, count: max + 1)
-        var candidate: Int = 0
-        var numberOfPrimes: Int = 0
-        var isPrime: Bool = false
-        var ord: Int = 0
-        var square: Int = 0
-        var n: Int = 0
-        var mult: [Int] = Array<Int>(repeating: 0, count: ORDMAX + 1)
+    init(max: Int) {
+        self.max = max
+    }
 
-        candidate = 1
-        numberOfPrimes = 1
-        primes[1] = 2
-        ord = 2
-        square = 9
+    let max: Int
 
-        while numberOfPrimes < max {
-            repeat {
-                candidate = candidate + 2
-                if candidate == square {
-                    ord = ord + 1
-                    square = primes[ord] * primes[ord]
-                    mult[ord - 1] = candidate
-                }
-                n = 2
-                isPrime = true
-                while n < ord && isPrime {
-                    while mult[n] < candidate {
-                        mult[n] = mult[n] + primes[n] + primes[n]
-                    }
-                    if mult[n] == candidate {
-                        isPrime = false
-                    }
-                    n = n + 1
-                }
-            } while !isPrime
-            numberOfPrimes = numberOfPrimes + 1
-            primes[numberOfPrimes] = candidate
+    func find() -> [Int] {
+        self.prepare()
+
+        var candidate: Int = 1
+
+        while self.primes.count <= self.max {
+            candidate = candidate + 2
+            if self.isPrime(candidate) {
+                self.primes.append(candidate)
+            }
         }
 
-        return primes
+        return self.primes
+    }
+
+    func prepare() {
+        self.primes = []
+        self.mult = Array<Int>(repeating: 0, count: ORDMAX + 1)
+
+        self.primes.append(0)
+        self.primes.append(2)
+        self.ord = 2
+        self.square = 9
+    }
+
+    var ord: Int = 0
+    var square: Int = 0
+    let ORDMAX = 30
+    var primes: [Int] = []
+    var mult: [Int] = []
+
+    func isPrime(_ candidate: Int) -> Bool {
+        if candidate == self.square {
+            self.ord = self.ord + 1
+            self.square = self.primes[ord] * self.primes[ord]
+            self.mult[ord - 1] = candidate
+        }
+
+        var n = 2
+        var isPrime = true
+        while n < self.ord && isPrime {
+            while self.mult[n] < candidate {
+                self.mult[n] = self.mult[n] + self.primes[n] + self.primes[n]
+            }
+
+            if self.mult[n] == candidate {
+                isPrime = false
+            }
+            n = n + 1
+        }
+
+        return isPrime
     }
 
 }
@@ -64,11 +79,9 @@ class NumberPrinter {
     static func printNumber(_ numbers: [Int]) {
         let RR = 50
         let CC = 4
-        var pageNumber: Int = 0
-        var pageOffset: Int = 0
+        var pageNumber = 1
+        var pageOffset = 1
 
-        pageNumber = 1
-        pageOffset = 1
         while pageOffset < numbers.count {
             print("The First \(numbers.count - 1) Prime Numbers --- page \(pageNumber)")
             for rowOffset in pageOffset..<(pageOffset + RR) {
@@ -91,7 +104,7 @@ class NumberPrinter {
 class PrintPrimes {
 
     static func main() {
-        let primes = PrimeFinder.find()
+        let primes = PrimeFinder(max: 1000).find()
         NumberPrinter.printNumber(primes)
     }
 
