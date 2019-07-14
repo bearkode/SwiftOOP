@@ -12,6 +12,11 @@ import Foundation
 class PrintPrimes {
 
     static func main() {
+        let primes = self.findPrimeNumbers()
+        self.printPrimeNumbers(primes)
+    }
+
+    static func findPrimeNumbers() -> [Int] {
         let max = 1000
         let ORDMAX = 30
         var primes: [Int] = Array<Int>(repeating: 0, count: max + 1)
@@ -53,6 +58,10 @@ class PrintPrimes {
             primes[numberOfPrimes] = candidate
         }
 
+        return primes
+    }
+
+    static func printPrimeNumbers(_ primes: [Int]) {
         let RR = 50
         let CC = 4
         var pageNumber: Int = 0
@@ -60,11 +69,11 @@ class PrintPrimes {
 
         pageNumber = 1
         pageOffset = 1
-        while pageOffset <= max {
-            print("The First \(max) Prime Numbers --- page \(pageNumber)")
+        while pageOffset < primes.count {
+            print("The First \(primes.count - 1) Prime Numbers --- page \(pageNumber)")
             for rowOffset in pageOffset..<(pageOffset + RR) {
                 for c in 0..<CC {
-                    if rowOffset + c * RR <= max {
+                    if rowOffset + c * RR < primes.count {
                         let num = String(format: "%10d", primes[rowOffset + c * RR])
                         print("\(num)", terminator: "")
                     }
