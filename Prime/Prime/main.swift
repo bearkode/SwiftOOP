@@ -9,14 +9,9 @@
 import Foundation
 
 
-class PrintPrimes {
+class PrimeFinder {
 
-    static func main() {
-        let primes = self.findPrimeNumbers()
-        self.printPrimeNumbers(primes)
-    }
-
-    static func findPrimeNumbers() -> [Int] {
+    static func find() -> [Int] {
         let max = 1000
         let ORDMAX = 30
         var primes: [Int] = Array<Int>(repeating: 0, count: max + 1)
@@ -61,7 +56,12 @@ class PrintPrimes {
         return primes
     }
 
-    static func printPrimeNumbers(_ primes: [Int]) {
+}
+
+
+class NumberPrinter {
+
+    static func printNumber(_ numbers: [Int]) {
         let RR = 50
         let CC = 4
         var pageNumber: Int = 0
@@ -69,12 +69,12 @@ class PrintPrimes {
 
         pageNumber = 1
         pageOffset = 1
-        while pageOffset < primes.count {
-            print("The First \(primes.count - 1) Prime Numbers --- page \(pageNumber)")
+        while pageOffset < numbers.count {
+            print("The First \(numbers.count - 1) Prime Numbers --- page \(pageNumber)")
             for rowOffset in pageOffset..<(pageOffset + RR) {
                 for c in 0..<CC {
-                    if rowOffset + c * RR < primes.count {
-                        let num = String(format: "%10d", primes[rowOffset + c * RR])
+                    if rowOffset + c * RR < numbers.count {
+                        let num = String(format: "%10d", numbers[rowOffset + c * RR])
                         print("\(num)", terminator: "")
                     }
                 }
@@ -83,6 +83,16 @@ class PrintPrimes {
             pageNumber = pageNumber + 1
             pageOffset = pageOffset + RR * CC
         }
+    }
+
+}
+
+
+class PrintPrimes {
+
+    static func main() {
+        let primes = PrimeFinder.find()
+        NumberPrinter.printNumber(primes)
     }
 
 }
