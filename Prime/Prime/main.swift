@@ -12,59 +12,60 @@ import Foundation
 class PrintPrimes {
 
     static func main() {
-        let M = 1000
-        let RR = 50
-        let CC = 4
+        let max = 1000
         let ORDMAX = 30
-        var p: [Int] = Array<Int>(repeating: 0, count: M + 1)
-        var pageNumber: Int = 0
-        var pageOffset: Int = 0
-        var j: Int = 0
-        var k: Int = 0
-        var jPrime: Bool = false
+        var primes: [Int] = Array<Int>(repeating: 0, count: max + 1)
+        var candidate: Int = 0
+        var numberOfPrimes: Int = 0
+        var isPrime: Bool = false
         var ord: Int = 0
         var square: Int = 0
         var n: Int = 0
         var mult: [Int] = Array<Int>(repeating: 0, count: ORDMAX + 1)
 
-        j = 1
-        k = 1
-        p[1] = 2
+        candidate = 1
+        numberOfPrimes = 1
+        primes[1] = 2
         ord = 2
         square = 9
 
-        while k < M {
+        while numberOfPrimes < max {
             repeat {
-                j = j + 2
-                if j == square {
+                candidate = candidate + 2
+                if candidate == square {
                     ord = ord + 1
-                    square = p[ord] * p[ord]
-                    mult[ord - 1] = j
+                    square = primes[ord] * primes[ord]
+                    mult[ord - 1] = candidate
                 }
                 n = 2
-                jPrime = true
-                while n < ord && jPrime {
-                    while mult[n] < j {
-                        mult[n] = mult[n] + p[n] + p[n]
+                isPrime = true
+                while n < ord && isPrime {
+                    while mult[n] < candidate {
+                        mult[n] = mult[n] + primes[n] + primes[n]
                     }
-                    if mult[n] == j {
-                        jPrime = false
+                    if mult[n] == candidate {
+                        isPrime = false
                     }
                     n = n + 1
                 }
-            } while !jPrime
-            k = k + 1
-            p[k] = j
+            } while !isPrime
+            numberOfPrimes = numberOfPrimes + 1
+            primes[numberOfPrimes] = candidate
         }
+
+        let RR = 50
+        let CC = 4
+        var pageNumber: Int = 0
+        var pageOffset: Int = 0
 
         pageNumber = 1
         pageOffset = 1
-        while pageOffset <= M {
-            print("The First \(M) Prime Numbers --- page \(pageNumber)")
+        while pageOffset <= max {
+            print("The First \(max) Prime Numbers --- page \(pageNumber)")
             for rowOffset in pageOffset..<(pageOffset + RR) {
                 for c in 0..<CC {
-                    if rowOffset + c * RR <= M {
-                        let num = String(format: "%10d", p[rowOffset + c * RR])
+                    if rowOffset + c * RR <= max {
+                        let num = String(format: "%10d", primes[rowOffset + c * RR])
                         print("\(num)", terminator: "")
                     }
                 }
@@ -79,5 +80,3 @@ class PrintPrimes {
 
 
 PrintPrimes.main()
-
-
